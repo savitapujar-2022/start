@@ -9,7 +9,7 @@ pipeline{
             }
             stage('memory usage'){
                 steps{
-                    sh 'free-h'
+                    sh 'free -h'
                 }
             }
             stage('disk usege'){
