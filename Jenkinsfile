@@ -14,7 +14,7 @@ pipeline{
             }
             stage('disk usege'){
                 steps{
-                    sh 'df-kh'
+                    sh 'df -kh'
                 }
             }
 
