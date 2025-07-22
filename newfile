@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+  tools{
+        jdk 'java-17'
+    maven 'maven'
+    }
+
+    stages{
+        stage('git checkout'){
+            steps{
+               git branch: 'main' , url: ''          
+            }
+        }
+        stage('code compile'){
+            steps{
+                sh 'maven compile'
+            }
+        }
+        stage('code package'){
+            steps{
+                sh 'maven clean install'
+            }
+        }
+        stage('Build and tag'){
+            steps{
+                sh 'docker build -t savita111/project1 .'
+            }
+        }
+        stage('containerization'){
+            steps{
+                sh 'docker run -it -d --name -p 9002:8080 savita111/project1'
+            }
+        }
+         stage('login to docker hub'){
+            steps{
+              script{withCredentials([usernameColonPassword(credentialsId: 'docker_credentials', variable: '$DOCKER_NAME')]) 
+           sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password stdin-"
+}
+                sh 'date'
+            }
+        }
+    }
+}
+   stage('pushing image to docker hub'){
+            steps{
+                sh 'docker push savita111/project1'
+            }
+        }
